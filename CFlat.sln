@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CFlat", "src\CFlat\CFlat.fsproj", "{3198A8FB-F0E7-4BE2-B7AB-EB9E218A8D4A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CFlat.Repl", "src\CFlat.Repl\CFlat.Repl.fsproj", "{EEF8837B-9E46-452E-AC67-C91B58639BB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1DF3253C-D3C6-4DFF-9234-3B9D49FB5BDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E897CFAA-787D-42E8-A324-D2A6A76B7463}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CFlat.Tests", "tests\CFlat.Tests\CFlat.Tests.fsproj", "{988DF64A-8870-45AF-BD04-4B119A33D75B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3198A8FB-F0E7-4BE2-B7AB-EB9E218A8D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3198A8FB-F0E7-4BE2-B7AB-EB9E218A8D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3198A8FB-F0E7-4BE2-B7AB-EB9E218A8D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3198A8FB-F0E7-4BE2-B7AB-EB9E218A8D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF8837B-9E46-452E-AC67-C91B58639BB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF8837B-9E46-452E-AC67-C91B58639BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF8837B-9E46-452E-AC67-C91B58639BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF8837B-9E46-452E-AC67-C91B58639BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{988DF64A-8870-45AF-BD04-4B119A33D75B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988DF64A-8870-45AF-BD04-4B119A33D75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988DF64A-8870-45AF-BD04-4B119A33D75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988DF64A-8870-45AF-BD04-4B119A33D75B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3198A8FB-F0E7-4BE2-B7AB-EB9E218A8D4A} = {1DF3253C-D3C6-4DFF-9234-3B9D49FB5BDF}
+		{EEF8837B-9E46-452E-AC67-C91B58639BB0} = {1DF3253C-D3C6-4DFF-9234-3B9D49FB5BDF}
+		{988DF64A-8870-45AF-BD04-4B119A33D75B} = {E897CFAA-787D-42E8-A324-D2A6A76B7463}
+	EndGlobalSection
+EndGlobal

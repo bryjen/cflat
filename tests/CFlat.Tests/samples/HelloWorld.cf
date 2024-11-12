@@ -1,0 +1,8 @@
+﻿using System;
+
+namespace Program;
+
+public int Main(string[] args) {
+    Console.WriteLine("Hello, World!");
+    return 0;
+}
