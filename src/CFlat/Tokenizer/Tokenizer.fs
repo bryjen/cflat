@@ -85,7 +85,6 @@ type Tokenizer(lines: string array) =
     
     let mutable currentLine = -1
     let mutable tokensList: Token List = []
-    let mutable tokenizerExceptions: IExceptionBase List = []
     
     member this.GetTokens() =
         tokensList
@@ -103,7 +102,7 @@ type Tokenizer(lines: string array) =
         let mutable col = 0
         while col < line.Length do
             match chars[col] with
-            | c when isAlphaNumeric c ->
+            | c when isAlpha c || isAlphaUpper c ->
                 let start = col
                 col <- readAlphaNumeric chars start
                 let slice = chars[start .. col - 1]
@@ -117,18 +116,32 @@ type Tokenizer(lines: string array) =
                 }
                 tokensList <-  asToken :: tokensList
                 
+            | c when isDigit c ->
+                let start = col
+                col <- readNumber chars start
+                let slice = chars[start .. col - 1]
+                let asString = System.String(slice)
+                
+                let asToken = {
+                    Literal = asString
+                    TokenType = TokenType.Literal Literal.Int
+                    Line = currentLine
+                    StartCol = start 
+                }
+                tokensList <-  asToken :: tokensList
+                
             | c when c = '\"' ->  // case for string literal token types
                 let start = col + 1
                 col <- readUntil chars (fun c -> c <> '\"') start
                 col <- col + 1  // skip the closing '"' char
-                let slice = chars[start - 1 .. col - 2]
+                let slice = chars[start - 1 .. col - 1]
                 let asString = System.String(slice)
                 
                 let asToken = {
                     Literal = asString
                     TokenType = TokenType.Literal Literal.String
                     Line = currentLine
-                    StartCol = start 
+                    StartCol = start  - 1
                 }
                 tokensList <-  asToken :: tokensList
                 
@@ -151,5 +164,5 @@ type Tokenizer(lines: string array) =
                 col <- col + 1
             
         if currentLine = lines.Length - 1 then
-            let eofToken = { Literal = "\0"; TokenType = Eof; Line = currentLine; StartCol = line.Length + 1 }
+            let eofToken = { Literal = "\0"; TokenType = Eof; Line = currentLine; StartCol = line.Length }
             tokensList <-  eofToken :: tokensList

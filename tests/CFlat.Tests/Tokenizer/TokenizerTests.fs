@@ -1,11 +1,22 @@
 ﻿module CFlat.Tests.Tokenizer.TokenizerTests
 
+open System
 open System.IO
+open System.Reflection
+open Microsoft.FSharp.Core
 open NUnit.Framework
 open CFlat.Tokenizer
 
-// chatgpt code
-// fuck it
+let recordToStr (record: 'T) : string =
+    let recordType = record.GetType()
+    let properties = recordType.GetProperties(BindingFlags.Public ||| BindingFlags.Instance)
+    properties |> Array.map (fun prop ->
+        let name = prop.Name
+        let value = prop.GetValue(record)
+        $"%s{name}: %A{value}"
+    )
+    |> String.concat "\n"
+
 let assertRecordsEqual (expected: 'T) (actual: 'T) =
     if expected <> actual then
         let differences =
@@ -19,10 +30,13 @@ let assertRecordsEqual (expected: 'T) (actual: 'T) =
             )
             |> Seq.toList
         if differences.Length > 0 then
-            let message = "Records do not match:\n" + (String.concat "\n" differences)
+            let message = "Records do not match:\n"
+                          + (String.concat "\n" differences)
+                          + $"\n\nExpected:\n{recordToStr expected}"
+                          + $"\n\nActual:\n{recordToStr actual}"
             Assert.Fail(message)
     else
-        Assert.Pass()  // Records are equal
+        ()
 
 [<SetUp>]
 let Setup () =
@@ -81,6 +95,6 @@ let ``Tokenize 'HelloWorld.cf'`` () =
         let actualToken = tokens[i]
         let expectedToken = expectedTokens[i]
         
-        assertRecordsEqual actualToken expectedToken
+        assertRecordsEqual expectedToken actualToken
         
     Assert.Pass()
