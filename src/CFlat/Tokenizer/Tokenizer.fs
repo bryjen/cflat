@@ -6,6 +6,21 @@ open CFlat.Tokenizer
 
 [<AutoOpen>]
 module private TokenizerHelpers =
+    let tryGetCharIfMatch (charsToMatch: char array) (chars: char array) (index: int) =
+        if index >= 0 && index < chars.Length then
+            match chars[index] with
+            | c when Array.contains c charsToMatch ->
+                Some c
+            | _ ->
+                None
+        else
+            None
+            
+    let prefixCharToString (charOption: char option) (str: string) =
+        match charOption with
+        | Some char -> char.ToString() + str
+        | None -> str
+    
     let readUntil (chars: char array) (charPredicate: char -> bool) start =
         let mutable current = start
         while current < chars.Length && charPredicate chars[current] do
@@ -19,7 +34,7 @@ module private TokenizerHelpers =
         readUntil chars (fun c -> isAlphaUpper c || isAlpha c) start
         
     let readNumber (chars: char array) start =
-        readUntil chars isDigit start
+        readUntil chars (fun c -> isDigit c || c = '.') start
         
     let readAsciiPunctuation (chars: char array) start =
         readUntil chars isAsciiPunctuation start
@@ -56,6 +71,8 @@ module private TokenizerHelpers =
         | "namespace" -> Some (TokenType.Keyword Namespace)
         | "struct" -> Some (TokenType.Keyword Struct)
         | "union" -> Some (TokenType.Keyword Union)
+        | "class" -> Some (TokenType.Keyword Class)
+        
         | "signed" -> Some (TokenType.Keyword Signed)
         | "unsigned" -> Some (TokenType.Keyword Unsigned)
         | "int" -> Some (TokenType.Keyword Int)
@@ -67,16 +84,22 @@ module private TokenizerHelpers =
         | "double" -> Some (TokenType.Keyword Double)
         | "string" -> Some (TokenType.Keyword String)
         | "unit" -> Some (TokenType.Keyword Unit)
+        
         | "if" -> Some (TokenType.Keyword If)
         | "else" -> Some (TokenType.Keyword Else)
         | "return" -> Some (TokenType.Keyword Return)
         | "match" -> Some (TokenType.Keyword Match)
         | "with" -> Some (TokenType.Keyword With)
+        
         | "public" -> Some (TokenType.Keyword Public)
         | "private" -> Some (TokenType.Keyword Private)
+        | "static" -> Some (TokenType.Keyword Static)
+        
         | "var" -> Some (TokenType.Keyword Var)
         | "const" -> Some (TokenType.Keyword Const)
         | "mut" -> Some (TokenType.Keyword Mut)
+        
+        | "new" -> Some (TokenType.Keyword New)
         
         | _ -> None
     
@@ -117,31 +140,56 @@ type Tokenizer(lines: string array) =
                 tokensList <-  asToken :: tokensList
                 
             | c when isDigit c ->
+                // Handle prefix cases
+                let prefixOption = tryGetCharIfMatch [| '-' |] chars (col - 1)
+                if prefixOption.IsSome then
+                    tokensList <- tokensList.Tail
+                
+                // Read token
                 let start = col
                 col <- readNumber chars start
                 let slice = chars[start .. col - 1]
                 let asString = System.String(slice)
                 
+                let startAdjusted = if prefixOption.IsSome then start - 1 else start
+                
                 let asToken = {
-                    Literal = asString
-                    TokenType = TokenType.Literal Literal.Int
+                    Literal = prefixCharToString prefixOption asString
+                    TokenType = TokenType.Literal Literal.Number
                     Line = currentLine
-                    StartCol = start 
+                    StartCol = startAdjusted 
                 }
                 tokensList <-  asToken :: tokensList
                 
             | c when c = '\"' ->  // case for string literal token types
+                // Handle prefix cases
+                let prefixOption = tryGetCharIfMatch [| '$' |] chars (col - 1)
+                
+                let tokenType =
+                    match prefixOption with
+                    | Some char when char = '$' -> Literal.InterpolatedString
+                    | _ -> Literal.String
+                    
+                if prefixOption.IsSome then
+                    tokensList <- tokensList.Tail
+                
+                // Read token
                 let start = col + 1
                 col <- readUntil chars (fun c -> c <> '\"') start
                 col <- col + 1  // skip the closing '"' char
                 let slice = chars[start - 1 .. col - 1]
                 let asString = System.String(slice)
                 
+                let startAdjustedForPrefix =
+                    if prefixOption.IsSome
+                    then start - 1
+                    else start
+                
                 let asToken = {
-                    Literal = asString
-                    TokenType = TokenType.Literal Literal.String
+                    Literal = prefixCharToString prefixOption asString
+                    TokenType = TokenType.Literal tokenType
                     Line = currentLine
-                    StartCol = start  - 1
+                    StartCol = startAdjustedForPrefix - 1
                 }
                 tokensList <-  asToken :: tokensList
                 

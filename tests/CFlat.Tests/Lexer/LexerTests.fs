@@ -43,7 +43,7 @@ let ``Lex 'HelloWorld.cf'`` () =
         { Literal = ";"; LexemeType = LexemeType.Symbol Semicolon; Line = 5; StartCol = 38 }
         
         { Literal = "return"; LexemeType = LexemeType.Keyword (ControlFlow Return); Line = 6; StartCol = 4 }
-        { Literal = "0"; LexemeType = LexemeType.Literal Literal.Int; Line = 6; StartCol = 11 }
+        { Literal = "0"; LexemeType = LexemeType.Literal Number; Line = 6; StartCol = 11 }
         { Literal = ";"; LexemeType = LexemeType.Symbol Semicolon; Line = 6; StartCol = 12 }
         
         { Literal = "}"; LexemeType = LexemeType.Symbol Rbrace; Line = 7; StartCol = 0 }

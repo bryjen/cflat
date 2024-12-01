@@ -10,7 +10,7 @@ type TokenType =
 and Literal =
     | String
     | InterpolatedString 
-    | Int 
+    | Number 
     
 and Symbol =
     | Lt
@@ -43,6 +43,7 @@ and Symbol =
 and Keyword =
     | Using
     | Namespace
+    | Class
     | Struct
     | Union
     
@@ -66,10 +67,13 @@ and Keyword =
     
     | Public
     | Private
+    | Static
     
     | Var
     | Const
     | Mut
+    
+    | New
     
     
 type Token =

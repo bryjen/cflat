@@ -1,0 +1,19 @@
+﻿using System.Text.Json;
+
+namespace CFlat;
+
+public class Vector {
+    public float X;
+    public float Y;
+    public float Z;
+}
+
+public static int Main(string[] args) {
+    var vector = new Vector {
+        X = 11.1,
+        Y = 0,
+        Z = -12.6,
+    };
+    Console.WriteLine($"{vector.X}");
+    return 0;
+}
