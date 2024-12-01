@@ -27,4 +27,8 @@
       <ProjectReference Include="..\..\src\CFlat\CFlat.fsproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="Lexer\LexerTests.fs" />
+    </ItemGroup>
+
 </Project>

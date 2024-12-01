@@ -11,5 +11,7 @@
         <Compile Include="Tokenizer\Tokens.fs" />
         <Compile Include="Tokenizer\TokenizerExceptions.fs" />
         <Compile Include="Tokenizer\Tokenizer.fs" />
+        <Compile Include="Lexer\Lexemes.fs" />
+        <Compile Include="Lexer\Lexer.fs" />
     </ItemGroup>
 </Project>
